@@ -14,3 +14,7 @@ export const MainView = styled.View`
 export const Container = styled.View`
   align-items: ${(props) => (props.alignItems ? props.alignItems : 'flex-end')};
 `;
+
+export const CustomText = styled.Text`
+  color: ${(props) => (props.color ? props.color : Theme.colors.BLACK)};
+`;

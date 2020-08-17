@@ -9,7 +9,7 @@ export const Button = styled.TouchableOpacity`
   background-color: ${Theme.colors.BUTTON_COLOR};
   height: 40px;
   width: 120px;
-  border-radius: 5;
+  border-radius: 5px;
 `;
 
 export const Link = styled.TouchableOpacity`

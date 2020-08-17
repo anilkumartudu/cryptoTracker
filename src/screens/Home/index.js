@@ -10,7 +10,6 @@ import {MainView, Container} from './style';
 const Home = (props) => {
   useEffect(() => {
     setCryptoCurrData([...props.cryptoArray]);
-    console.log(cryptoCurrData);
   }, [props.cryptoArray, cryptoCurrData]);
 
   const [cryptoCurrData, setCryptoCurrData] = useState([]);
@@ -20,7 +19,7 @@ const Home = (props) => {
 
   return (
     <MainView>
-      {cryptoCurrData ? (
+      {cryptoCurrData.length > 0 ? (
         <FlatList
           data={cryptoCurrData}
           renderItem={({item}) => <CustomCard data={item} />}

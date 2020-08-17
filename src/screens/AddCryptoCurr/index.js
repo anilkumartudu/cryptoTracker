@@ -1,15 +1,26 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
+import {Modal} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 import * as actionTypes from '../../store/action';
 import Theme from '../../theme';
 import {CustomBtn} from '../../components';
-import {MainView, Container, CustomText, CustomTextInput} from './style';
+import {
+  MainView,
+  Container,
+  CustomText,
+  CustomTextInput,
+  CenterView,
+  ModalView,
+  ModalText,
+} from './style';
 
 const AddCryptoCurr = (props) => {
   const [isFocused, setIsFocused] = useState(false);
   const [cryptoCurrName, setCryptoCurrName] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [error, setError] = useState('');
 
   const backToListHandler = () => props.navigation.navigate('Home');
 
@@ -19,14 +30,38 @@ const AddCryptoCurr = (props) => {
 
   const addHandler = () => {
     fetch(`https://data.messari.io/api/v1/assets/${cryptoCurrName}/metrics`)
-      .then((response) => response.json())
-      .then((responseText) => props.onCryptoCurrDataStore(responseText.data));
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          throw Error('Please check if the "key" is valid');
+        }
+      })
+      .then((responseText) => props.onCryptoCurrDataStore(responseText.data))
+      .catch((err) => {
+        setError(`${err.message}`);
+        setModalVisible(true);
+      });
     // props.navigation.navigate('Home');
   };
 
   return (
     <KeyboardAwareScrollView>
       <MainView>
+        <Modal animationType="slide" transparent={true} visible={modalVisible}>
+          <CenterView>
+            <ModalView>
+              <ModalText>{error}</ModalText>
+              <CustomBtn
+                onPress={() => setModalVisible(false)}
+                text="Close"
+                textColor={Theme.colors.BUTTON_ACTIVE_TEXT_COLOR}
+                isBtn={true}
+              />
+            </ModalView>
+          </CenterView>
+        </Modal>
+
         <Container style={{marginBottom: 200}}>
           <CustomBtn
             onPress={backToListHandler}
